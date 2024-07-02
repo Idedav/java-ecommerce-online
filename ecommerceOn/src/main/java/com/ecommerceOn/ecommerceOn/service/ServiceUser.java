@@ -18,14 +18,31 @@ public class ServiceUser implements UserFunctions{
 
 	@Override
 	public StatusLogging login(String email, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Optional<User> userOpt = getUserByEmail(email);
+		
+		if(userOpt.isEmpty()) {
+			
+			return StatusLogging.WRONG_MAIL;
+			
+		}
+		
+		
+		if(!userOpt.get().getPassword().equals(password)) {
+			
+			return StatusLogging.WRONG_PASSWORD;
+			
+		}
+		
+		return StatusLogging.LOGIN_SUCCESFULLY;
+		
 	}
 
 	@Override
-	public Optional<User> getUser(String email) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	public Optional<User> getUserByEmail(String email) {
+		
+		return userRepository.findByEmail(email);
+		
 	}
 
 }

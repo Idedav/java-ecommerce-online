@@ -10,6 +10,6 @@ public interface UserFunctions {
 
 	StatusLogging login(String email, String password);
 	
-	Optional<User> getUser(String email);
+	Optional<User> getUserByEmail(String email);
 	
 }
