@@ -2,6 +2,7 @@ package com.ecommerceOn.ecommerceOn.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -33,9 +34,87 @@ public class Article implements Serializable{
 	
 	@Column(name= "qty_available")
 	private int qtyAvailable;
-	
-    @OneToMany(mappedBy = "article")
-    private Set<ArticleCart> articleCarts;
+
+	public Article(String idArticle, String name, String description, BigDecimal unitPrice, int qtyAvailable) {
+		super();
+		this.idArticle = idArticle;
+		this.name = name;
+		this.description = description;
+		this.unitPrice = unitPrice;
+		this.qtyAvailable = qtyAvailable;
+	}
+
+	public Article() {
+		super();
+	}
+
+	public String getIdArticle() {
+		return idArticle;
+	}
+
+	public void setIdArticle(String idArticle) {
+		this.idArticle = idArticle;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public int getQtyAvailable() {
+		return qtyAvailable;
+	}
+
+	public void setQtyAvailable(int qtyAvailable) {
+		this.qtyAvailable = qtyAvailable;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(description, idArticle, name, qtyAvailable, unitPrice);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Article other = (Article) obj;
+		return Objects.equals(description, other.description) && Objects.equals(idArticle, other.idArticle)
+				&& Objects.equals(name, other.name) && qtyAvailable == other.qtyAvailable
+				&& Objects.equals(unitPrice, other.unitPrice);
+	}
+
+	@Override
+	public String toString() {
+		return idArticle;
+	}
     
     
 }

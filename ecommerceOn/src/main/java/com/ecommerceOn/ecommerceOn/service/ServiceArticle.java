@@ -18,14 +18,16 @@ public class ServiceArticle implements ArticleFunctions{
 
 	@Override
 	public Optional<Article> getArticle(String idArticle) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		
+		return articleRepository.findById(idArticle);
+		
 	}
 
 	@Override
 	public List<Article> getAllArticles() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return articleRepository.findByQtyAvailableGreaterThan(0);
+		
 	}
 
 }

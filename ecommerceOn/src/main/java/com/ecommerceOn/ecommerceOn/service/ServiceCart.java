@@ -19,39 +19,41 @@ public class ServiceCart implements CartFunctions{
 	private CartRepository cartRepository;
 
 	@Override
-	public Optional<Cart> getCart(int idCart, String idArticle) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	public Optional<Cart> getCartByUserId(int idUser) {
+		
+		return cartRepository.findByUserIdUser(idUser);
+		
 	}
 
 	@Override
-	public List<Cart> getCarts(int idCart) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean existCart(int idUser) {
+		
+		return getCartByUserId(idUser).isPresent();
+		
 	}
 
 	@Override
-	public boolean existCart(int idCart, String idArticle) {
+	public boolean deleteCart(int idUser) {
+		
+		if(!existCart(idUser)) {
+			
+			return false;
+			
+		}
+		
+		Cart cart = getCartByUserId(idUser).get();
+		
+		cartRepository.delete(cart);
+		
+		return true;
+		
+	}
+
+	@Override
+	public boolean updateCart(int idUser, String idArticle, int qtyOrdered) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
-	public boolean deleteCart(int idCart, String idArticle) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean updateCart(int idCart, String idArticle, int qtyOrdered) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public StatusOrder addCart(int idUser, String idArticle, int qtyOrdered, TypePayment typePayment) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

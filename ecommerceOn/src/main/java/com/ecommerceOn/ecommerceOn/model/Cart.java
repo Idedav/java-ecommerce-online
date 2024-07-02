@@ -1,15 +1,23 @@
 package com.ecommerceOn.ecommerceOn.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -25,17 +33,90 @@ public class Cart implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private int idUser;
+	private int idCart;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "article_cart",
+			joinColumns = @JoinColumn(name="cart_id"),
+			inverseJoinColumns = @JoinColumn(name="article_id")
+			)
+	private Set<Article> articles = new HashSet<>();
+	
 	@Column(name = "total_price")
 	private int totalPrice;
+
+	public Cart(int idCart, User user, Set<Article> articles, int totalPrice) {
+		super();
+		this.idCart = idCart;
+		this.user = user;
+		this.articles = articles;
+		this.totalPrice = totalPrice;
+	}
+
+	public Cart() {
+		super();
+	}
+
+	public int getIdCart() {
+		return idCart;
+	}
+
+	public void setIdCart(int idCart) {
+		this.idCart = idCart;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Set<Article> getArticles() {
+		return articles;
+	}
+
+	public void setArticles(Set<Article> articles) {
+		this.articles = articles;
+	}
+
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(articles, idCart, totalPrice, user);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cart other = (Cart) obj;
+		return Objects.equals(articles, other.articles) && idCart == other.idCart && totalPrice == other.totalPrice
+				&& Objects.equals(user, other.user);
+	}
 	
-    @OneToMany(mappedBy = "cart")
-    private Set<ArticleCart> articleCarts;
 	
+    
 
 }
