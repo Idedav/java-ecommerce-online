@@ -30,12 +30,12 @@ public class Article implements Serializable{
 	private String description;
 	
 	@Column(name= "unit_price")
-	private BigDecimal unitPrice;
+	private double unitPrice;
 	
 	@Column(name= "qty_available")
 	private int qtyAvailable;
 
-	public Article(String idArticle, String name, String description, BigDecimal unitPrice, int qtyAvailable) {
+	public Article(String idArticle, String name, String description, double unitPrice, int qtyAvailable) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -72,11 +72,11 @@ public class Article implements Serializable{
 		this.description = description;
 	}
 
-	public BigDecimal getUnitPrice() {
+	public double getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(BigDecimal unitPrice) {
+	public void setUnitPrice(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 

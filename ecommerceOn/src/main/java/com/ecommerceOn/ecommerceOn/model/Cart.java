@@ -1,6 +1,7 @@
 package com.ecommerceOn.ecommerceOn.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -48,9 +49,9 @@ public class Cart implements Serializable{
 	private Set<Article> articles = new HashSet<>();
 	
 	@Column(name = "total_price")
-	private int totalPrice;
+	private double totalPrice;
 
-	public Cart(int idCart, User user, Set<Article> articles, int totalPrice) {
+	public Cart(int idCart, User user, Set<Article> articles, double totalPrice) {
 		super();
 		this.idCart = idCart;
 		this.user = user;
@@ -86,11 +87,11 @@ public class Cart implements Serializable{
 		this.articles = articles;
 	}
 
-	public int getTotalPrice() {
+	public double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(int totalPrice) {
+	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -112,10 +113,11 @@ public class Cart implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Cart other = (Cart) obj;
-		return Objects.equals(articles, other.articles) && idCart == other.idCart && totalPrice == other.totalPrice
-				&& Objects.equals(user, other.user);
+		return Objects.equals(articles, other.articles) && idCart == other.idCart
+				&& Objects.equals(totalPrice, other.totalPrice) && Objects.equals(user, other.user);
 	}
-	
+
+
 	
     
 
