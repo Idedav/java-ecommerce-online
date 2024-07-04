@@ -2,6 +2,8 @@ package com.ecommerceOn.ecommerceOn.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -19,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerceOn.ecommerceOn.dto.ArticleCartDTO;
+import com.ecommerceOn.ecommerceOn.dto.ArticleDTO;
 import com.ecommerceOn.ecommerceOn.dto.CartDTO;
 import com.ecommerceOn.ecommerceOn.enums.StatusOrder;
+import com.ecommerceOn.ecommerceOn.model.Article;
 import com.ecommerceOn.ecommerceOn.model.ArticleCart;
 import com.ecommerceOn.ecommerceOn.model.Cart;
 import com.ecommerceOn.ecommerceOn.model.RequestCart;
+import com.ecommerceOn.ecommerceOn.service.ServiceArticle;
 import com.ecommerceOn.ecommerceOn.service.ServiceCart;
 
 
@@ -36,7 +41,34 @@ public class ControllerCart {
 	private ServiceCart serviceCart;
 	
 	@Autowired
+	private ServiceArticle serviceArticle;
+	
+	@Autowired
 	private ModelMapper modelMapper;
+	
+	//Map cartDTO
+    public CartDTO convertToCartDTO(Cart cart)  {
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+
+        // Ottenere la lista di CartArticle per il carrello specificato
+        List<ArticleCart> articleCarts = serviceCart.getCartArticlesByCartId(cart.getIdCart());
+
+        // Mappatura delle CartArticleDTO
+        Set<ArticleCartDTO> articleCartDTOs = articleCarts.stream()
+                .map(articleCart -> {
+                	ArticleCartDTO articleCartDTO = new ArticleCartDTO();
+                	articleCartDTO.setQtyOrdered(articleCart.getQtyOrdered());
+
+                    Article article = serviceArticle.getArticle(articleCart.getId().getIdArticle()).get();
+                    articleCartDTO.setArticle(modelMapper.map(article, ArticleDTO.class));
+                    return articleCartDTO;
+                })
+                .collect(Collectors.toSet());
+
+        cartDTO.setArticles(articleCartDTOs);
+
+        return cartDTO;
+    }
 	
 	@GetMapping(value="cart/{id_user}", produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> getCartByUserId(@PathVariable("id_user") int idUser){
@@ -50,7 +82,7 @@ public class ControllerCart {
 		}
 		Cart cart = cartOpt.get();
 	    
-	    CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+	    CartDTO cartDTO = convertToCartDTO(cart);
 		
 		return new ResponseEntity<>(cartDTO, HttpStatus.OK);
 		

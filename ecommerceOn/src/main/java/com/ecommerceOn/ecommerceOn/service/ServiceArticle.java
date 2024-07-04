@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerceOn.ecommerceOn.interfaces.ArticleFunctions;
 import com.ecommerceOn.ecommerceOn.model.Article;
+import com.ecommerceOn.ecommerceOn.model.Cart;
 import com.ecommerceOn.ecommerceOn.repository.ArticleRepository;
 
 @Service
@@ -51,5 +52,6 @@ public class ServiceArticle implements ArticleFunctions{
 		return true;
 		
 	}
+
 
 }

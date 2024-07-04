@@ -177,5 +177,10 @@ public class ServiceCart implements CartFunctions{
 		
 	}
 
+	public List<ArticleCart> getCartArticlesByCartId(int idCart) {
+		
+		return articleCartRepository.findByIdIdCart(idCart);
+	}
+
 
 }
