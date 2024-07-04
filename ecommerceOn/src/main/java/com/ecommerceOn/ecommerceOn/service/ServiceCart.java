@@ -53,11 +53,11 @@ public class ServiceCart implements CartFunctions{
 	}
 
 	@Override
-	public boolean deleteCart(int idUser) {
+	public StatusOrder deleteCart(int idUser) {
 		
 		if(!existCart(idUser)) {
 			
-			return false;
+			return StatusOrder.DELETE_UNSUCCESFULY;
 			
 		}
 		
@@ -65,7 +65,7 @@ public class ServiceCart implements CartFunctions{
 		
 		cartRepository.delete(cart);
 		
-		return true;
+		return StatusOrder.DELETE_UNSUCCESFULY;
 		
 	}
 

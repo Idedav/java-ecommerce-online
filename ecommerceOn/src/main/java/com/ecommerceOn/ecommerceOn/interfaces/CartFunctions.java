@@ -12,7 +12,7 @@ public interface CartFunctions {
 	
 	boolean existCart(int idUser);
 	
-	boolean deleteCart(int idUser);
+	StatusOrder deleteCart(int idUser);
 	
 	StatusOrder updateCart(int idUser, String idArticle, int qtyOrdered);
 	
