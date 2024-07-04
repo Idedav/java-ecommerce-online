@@ -30,4 +30,26 @@ public class ServiceArticle implements ArticleFunctions{
 		
 	}
 
+	@Override
+	public boolean checkQtyAvailable(String idArticle, int qtyOrdered) {
+		
+		Article article = getArticle(idArticle).get();
+		
+		return article.getQtyAvailable() - qtyOrdered <= -1 ? false : true;
+		
+	}
+
+	@Override
+	public boolean updateQtyAvailable(String idArticle, int qtyOrdered) {
+		
+		Article article = getArticle(idArticle).get();
+		
+		article.setQtyAvailable(article.getQtyAvailable() - qtyOrdered);
+		
+		articleRepository.save(article);
+		
+		return true;
+		
+	}
+
 }

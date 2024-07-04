@@ -14,7 +14,7 @@ public interface CartFunctions {
 	
 	boolean deleteCart(int idUser);
 	
-	boolean updateCart(int idUser, String idArticle, int qtyOrdered);
+	StatusOrder updateCart(int idUser, String idArticle, int qtyOrdered);
 	
 	StatusOrder addCart(int idUser, String idArticle, int qtyOrdered);
 

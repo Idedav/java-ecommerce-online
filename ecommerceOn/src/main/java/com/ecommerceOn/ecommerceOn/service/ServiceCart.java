@@ -34,6 +34,9 @@ public class ServiceCart implements CartFunctions{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private ServiceArticle serviceArticle;
 
 	@Override
 	public Optional<Cart> getCartByUserId(int idUser) {
@@ -67,67 +70,16 @@ public class ServiceCart implements CartFunctions{
 	}
 
 	@Override
-	public boolean updateCart(int idUser, String idArticle, int qtyOrdered) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-//	DA REFACTORZZARE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	@Override
-	public StatusOrder addCart(int idUser, String idArticle, int qtyOrdered) {
+	public StatusOrder updateCart(int idUser, String idArticle, int qtyOrdered) {
 		
 		Optional<Cart> cartOpt = getCartByUserId(idUser);
 		Cart cart = cartOpt.orElse(null);
-		Article article = articleRepository.findById(idArticle).get();
-		
-//		CONTROLLO LA QUANTITA DISPONIBILE DELL ARTICOLO
-		if(article.getQtyAvailable() - qtyOrdered <= -1) {
-			
-			return StatusOrder.QTY_NOT_AVAILABLE;
-			
-		}
-		
-		
-		
-//		CONTROLLO SE ESISTE IL CARRELLO
-		if(!cartOpt.isPresent()) {
-			
-//			SE NON ESISTE UN CART PER QUELLO USER ALLORA LO CREO
-			Cart newCart = new Cart();
-			
-			User user = userRepository.findById(idUser).get();
-			
-			newCart.setUser(user);
-			newCart.setTotalPrice(article.getUnitPrice() * qtyOrdered);
-			
-			cartRepository.save(newCart);
-			
-//			CREO LA RELAZIONE NELLA TABELLA ARTICLECART
-			ArticleCartID articleCartiID = new ArticleCartID(newCart.getIdCart(), idArticle);
-			ArticleCart articleCart = new ArticleCart();
-			
-			articleCart.setId(articleCartiID);
-			articleCart.setQtyOrdered(qtyOrdered);
-			
-			articleCartRepository.save(articleCart);
-			
-//			AGGIORNO LA QUANTITA DISPONIBILE DELL ARTICOLO
-			
-			article.setQtyAvailable(article.getQtyAvailable() - qtyOrdered);
-			
-			articleRepository.save(article);
-			
-			return StatusOrder.CREATED_SUCCESSFULY;
-			
-		}
-//		SE ESISTE LO AGGIORNO
-		
-		
+		Article article = serviceArticle.getArticle(idArticle).get();
 		
 //		CONTROLLO SE ESISTE GIA UN ARTICOLO DENTRO QUEL CARRELLO
 		ArticleCartID articleCartiID = new ArticleCartID(cart.getIdCart(), idArticle);
 		Optional<ArticleCart> articleCartOpt = articleCartRepository.findById(articleCartiID);
+		
 		if(articleCartOpt.isPresent()) {
 //			SE ESISTE AGGIORNO LA QUANTITA ORDINATA DI QUELL ARTICOLO
 			ArticleCart articleCart = articleCartOpt.get();
@@ -166,11 +118,61 @@ public class ServiceCart implements CartFunctions{
 		
 //		AGGIORNO LA QUANTITA DISPONIBILE DELL ARTICOLO
 		
-		article.setQtyAvailable(article.getQtyAvailable() - qtyOrdered);
-		
-		articleRepository.save(article);
+		serviceArticle.updateQtyAvailable(idArticle, qtyOrdered);
 		
 		return StatusOrder.ADDED_SUCCESSFULY;
+	}
+
+//	DA REFACTORZZARE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	@Override
+	public StatusOrder addCart(int idUser, String idArticle, int qtyOrdered) {
+		
+		Optional<Cart> cartOpt = getCartByUserId(idUser);
+		Cart cart = cartOpt.orElse(null);
+		Article article = serviceArticle.getArticle(idArticle).get();
+		
+//		CONTROLLO LA QUANTITA DISPONIBILE DELL ARTICOLO
+		if(!serviceArticle.checkQtyAvailable(idArticle, qtyOrdered)) {
+			
+			return StatusOrder.QTY_NOT_AVAILABLE;
+			
+		}
+		
+		
+		
+//		CONTROLLO SE ESISTE IL CARRELLO
+		if(!cartOpt.isPresent()) {
+			
+//			SE NON ESISTE UN CART PER QUELLO USER ALLORA LO CREO
+			Cart newCart = new Cart();
+			
+			User user = userRepository.findById(idUser).get();
+			
+			newCart.setUser(user);
+			newCart.setTotalPrice(article.getUnitPrice() * qtyOrdered);
+			
+			cartRepository.save(newCart);
+			
+//			CREO LA RELAZIONE NELLA TABELLA ARTICLECART
+			ArticleCartID articleCartiID = new ArticleCartID(newCart.getIdCart(), idArticle);
+			ArticleCart articleCart = new ArticleCart();
+			
+			articleCart.setId(articleCartiID);
+			articleCart.setQtyOrdered(qtyOrdered);
+			
+			articleCartRepository.save(articleCart);
+			
+//			AGGIORNO LA QUANTITA DISPONIBILE DELL ARTICOLO
+			
+			serviceArticle.updateQtyAvailable(idArticle, qtyOrdered);
+			
+			return StatusOrder.CREATED_SUCCESSFULY;
+			
+		}
+//		SE ESISTE LO AGGIORNO
+		
+		return updateCart(idUser, idArticle, qtyOrdered);
 		
 		
 	}

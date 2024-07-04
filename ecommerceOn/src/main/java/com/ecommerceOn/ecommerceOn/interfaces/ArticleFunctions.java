@@ -11,4 +11,8 @@ public interface ArticleFunctions {
 	
 	List<Article> getAllArticles();
 	
+	boolean checkQtyAvailable(String idArticle, int qtyOrdered);
+	
+	boolean updateQtyAvailable(String idArticle, int qtyOrdered);
+	
 }
