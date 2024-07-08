@@ -18,7 +18,7 @@ public class ServiceArticle implements ArticleFunctions{
 	private ArticleRepository articleRepository;
 
 	@Override
-	public Optional<Article> getArticle(String idArticle) {
+	public Optional<Article> getArticle(int idArticle) {
 		
 		return articleRepository.findById(idArticle);
 		
@@ -32,7 +32,7 @@ public class ServiceArticle implements ArticleFunctions{
 	}
 
 	@Override
-	public boolean checkQtyAvailable(String idArticle, int qtyOrdered) {
+	public boolean checkQtyAvailable(int idArticle, int qtyOrdered) {
 		
 		Article article = getArticle(idArticle).get();
 		
@@ -41,7 +41,7 @@ public class ServiceArticle implements ArticleFunctions{
 	}
 
 	@Override
-	public boolean updateQtyAvailable(String idArticle, int qtyOrdered) {
+	public boolean updateQtyAvailable(int idArticle, int qtyOrdered) {
 		
 		Article article = getArticle(idArticle).get();
 		

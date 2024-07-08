@@ -24,7 +24,7 @@ public class ControllerArticle {
 	private ServiceArticle serviceArticle;
 	
 	@GetMapping(value="article/{id_article}", produces= {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> getArticle(@PathVariable("id_article") String idArticle){
+	public ResponseEntity<?> getArticle(@PathVariable("id_article") int idArticle){
 		
 		 Optional<Article> articleOpt = serviceArticle.getArticle(idArticle);
 		

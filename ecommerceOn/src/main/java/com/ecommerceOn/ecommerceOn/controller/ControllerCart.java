@@ -92,8 +92,6 @@ public class ControllerCart {
 	@PostMapping(value="add-cart", produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> addCart(@RequestBody RequestCart requestCart ){
 		
-		int i = 1;
-		
 		 StatusOrder status = serviceCart.addCart(requestCart.getIdUser(), requestCart.getIdArticle(), requestCart.getQtyOrdered());
 		
 		if(status != StatusOrder.QTY_NOT_AVAILABLE) {
@@ -109,8 +107,6 @@ public class ControllerCart {
 	
 	@DeleteMapping(value="delete-cart/{id_user}", produces= {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<?> deleteCart(@PathVariable("id_user") int idUser){
-		
-		int i = 1;
 		
 		 StatusOrder status = serviceCart.deleteCart(idUser);
 		

@@ -1,27 +1,26 @@
 package com.ecommerceOn.ecommerceOn.model;
 
 import java.io.Serializable;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.ecommerceOn.ecommerceOn.enums.State;
 import com.ecommerceOn.ecommerceOn.enums.TypePayment;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "orders")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -31,20 +30,33 @@ public class Order implements Serializable{
 	@Column(name = "id")
 	private int idOrder;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "cart_id", referencedColumnName = "id")
-	private Cart cart;
-	
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-	
-	@Column(name= "payment_type")
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(
+			name = "article_order",
+			joinColumns = @JoinColumn(name="order_id"),
+			inverseJoinColumns = @JoinColumn(name="article_id")
+	)
+	private Set<Article> articles = new HashSet<>();
+
+	@Column(name = "total_price")
+	private double totalPrice;
+
+	@Column(name= "type_payment")
 	@Enumerated(EnumType.STRING)
 	private TypePayment typePayment;
 	
 	@Column(name= "state")
 	@Enumerated(EnumType.STRING)
 	private State state;
+
+	@Column(name = "order_date")
+	private LocalDate orderDate;
+
+	@Column(name = "order_time")
+	private LocalTime orderTime;
 	
 }

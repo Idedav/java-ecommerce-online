@@ -1,7 +1,5 @@
 package com.ecommerceOn.ecommerceOn.model;
 
-import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -9,18 +7,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Embeddable
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleCartID implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-		
-    @Column(name = "cart_id")
-    private int idCart;
+public class ArticleOrderID implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Column(name = "order_id")
+    private int idOrder;
 
     @Column(name = "article_id")
     private int idArticle;
-	
+
 }

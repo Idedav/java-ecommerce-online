@@ -3,17 +3,14 @@ package com.ecommerceOn.ecommerceOn.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecommerceOn.ecommerceOn.model.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecommerceOn.ecommerceOn.enums.StatusOrder;
 import com.ecommerceOn.ecommerceOn.enums.TypePayment;
 import com.ecommerceOn.ecommerceOn.interfaces.CartFunctions;
-import com.ecommerceOn.ecommerceOn.model.Article;
-import com.ecommerceOn.ecommerceOn.model.ArticleCart;
-import com.ecommerceOn.ecommerceOn.model.ArticleCartID;
-import com.ecommerceOn.ecommerceOn.model.Cart;
-import com.ecommerceOn.ecommerceOn.model.User;
 import com.ecommerceOn.ecommerceOn.repository.ArticleCartRepository;
 import com.ecommerceOn.ecommerceOn.repository.ArticleRepository;
 import com.ecommerceOn.ecommerceOn.repository.CartRepository;
@@ -60,17 +57,18 @@ public class ServiceCart implements CartFunctions{
 			return StatusOrder.DELETE_UNSUCCESFULY;
 			
 		}
-		
-		Cart cart = getCartByUserId(idUser).get();
-		
+		Cart cart = cartRepository.findByUserIdUser(idUser).get();
+
 		cartRepository.delete(cart);
-		
-		return StatusOrder.DELETE_UNSUCCESFULY;
+
+
+		return StatusOrder.DELETE_SUCCESFULY;
 		
 	}
 
+	@Transactional
 	@Override
-	public StatusOrder updateCart(int idUser, String idArticle, int qtyOrdered) {
+	public StatusOrder updateCart(int idUser, int idArticle, int qtyOrdered) {
 		
 		Optional<Cart> cartOpt = getCartByUserId(idUser);
 		Cart cart = cartOpt.orElse(null);
@@ -123,10 +121,10 @@ public class ServiceCart implements CartFunctions{
 		return StatusOrder.ADDED_SUCCESSFULY;
 	}
 
-//	DA REFACTORZZARE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
+//	DA REFACTORZZARE !!!!!!!!1!!!1!!!!!!!!1!!!!!!!!!!
+	@Transactional
 	@Override
-	public StatusOrder addCart(int idUser, String idArticle, int qtyOrdered) {
+	public StatusOrder addCart(int idUser, int idArticle, int qtyOrdered) {
 		
 		Optional<Cart> cartOpt = getCartByUserId(idUser);
 		Cart cart = cartOpt.orElse(null);

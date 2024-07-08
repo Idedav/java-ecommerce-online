@@ -22,11 +22,15 @@ import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "carts")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cart implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -36,11 +40,11 @@ public class Cart implements Serializable{
 	@Column(name = "id")
 	private int idCart;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(
 			name = "article_cart",
 			joinColumns = @JoinColumn(name="cart_id"),
@@ -50,75 +54,5 @@ public class Cart implements Serializable{
 	
 	@Column(name = "total_price")
 	private double totalPrice;
-
-	public Cart(int idCart, User user, Set<Article> articles, double totalPrice) {
-		super();
-		this.idCart = idCart;
-		this.user = user;
-		this.articles = articles;
-		this.totalPrice = totalPrice;
-	}
-
-	public Cart() {
-		super();
-	}
-
-	public int getIdCart() {
-		return idCart;
-	}
-
-	public void setIdCart(int idCart) {
-		this.idCart = idCart;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Set<Article> getArticles() {
-		return articles;
-	}
-
-	public void setArticles(Set<Article> articles) {
-		this.articles = articles;
-	}
-
-	public double getTotalPrice() {
-		return totalPrice;
-	}
-
-	public void setTotalPrice(double totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(articles, idCart, totalPrice, user);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cart other = (Cart) obj;
-		return Objects.equals(articles, other.articles) && idCart == other.idCart
-				&& Objects.equals(totalPrice, other.totalPrice) && Objects.equals(user, other.user);
-	}
-
-
-	
-    
 
 }

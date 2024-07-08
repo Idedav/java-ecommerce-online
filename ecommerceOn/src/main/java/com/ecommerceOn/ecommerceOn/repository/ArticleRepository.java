@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ecommerceOn.ecommerceOn.model.Article;
 
 
-public interface ArticleRepository extends JpaRepository<Article, String> {
+public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
 	List<Article> findByQtyAvailableGreaterThan(int qty);
 	

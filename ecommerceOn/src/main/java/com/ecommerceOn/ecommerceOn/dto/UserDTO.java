@@ -1,5 +1,12 @@
 package com.ecommerceOn.ecommerceOn.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 	
 	private String name;
@@ -7,42 +14,5 @@ public class UserDTO {
 	private String surname;
 	
 	private String email;
-
-	public UserDTO(String name, String surname, String email) {
-		super();
-		this.name = name;
-		this.surname = surname;
-		this.email = email;
-	}
-
-	public UserDTO() {
-		super();
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	
 
 }

@@ -14,8 +14,8 @@ public interface CartFunctions {
 	
 	StatusOrder deleteCart(int idUser);
 	
-	StatusOrder updateCart(int idUser, String idArticle, int qtyOrdered);
+	StatusOrder updateCart(int idUser, int idArticle, int qtyOrdered);
 	
-	StatusOrder addCart(int idUser, String idArticle, int qtyOrdered);
+	StatusOrder addCart(int idUser, int idArticle, int qtyOrdered);
 
 }
