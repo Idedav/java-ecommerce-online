@@ -115,4 +115,36 @@ public class ControllerOrder {
 
 	}
 
+	@PatchMapping(value="confirm-order/{id_order}", produces= {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> confirmOrder(@PathVariable("id_order") int idOrder){
+
+		boolean state = serviceOrder.confirmOrder(idOrder);
+
+		if(state) {
+
+			return new ResponseEntity<>(state, HttpStatus.OK);
+
+		}
+
+		return new ResponseEntity<>(state, HttpStatus.BAD_REQUEST);
+
+
+	}
+
+	@PatchMapping(value="cancel-order/{id_order}", produces= {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> cancelOrder(@PathVariable("id_order") int idOrder){
+
+		boolean state = serviceOrder.cancelOrder(idOrder);
+
+		if(state) {
+
+			return new ResponseEntity<>(state, HttpStatus.OK);
+
+		}
+
+		return new ResponseEntity<>(state, HttpStatus.BAD_REQUEST);
+
+
+	}
+
 }

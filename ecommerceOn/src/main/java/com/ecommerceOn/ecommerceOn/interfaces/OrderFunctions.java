@@ -19,6 +19,8 @@ public interface OrderFunctions {
 	
 	boolean confirmOrder(int idOrder);
 
+	boolean cancelOrder(int idOrder);
+
 	Optional<Order> addOrder(int idCart, TypePayment typePayment);
 
 	List<ArticleOrder> getArticleOrdersByOrderId(int idOrder);

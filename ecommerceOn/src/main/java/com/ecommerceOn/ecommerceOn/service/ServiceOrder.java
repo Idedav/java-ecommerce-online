@@ -60,12 +60,32 @@ public class ServiceOrder implements OrderFunctions{
 
 		Order order = getOrder(idOrder).get();
 
-		if (isConfirmedOrder(idOrder)){
+		if (order.getState() != State.CREATED){
 
 			return false;
 
 		}
 		order.setState(State.CONFIRMED);
+
+		orderReository.save(order);
+
+		return true;
+
+	}
+
+	@Override
+	public boolean cancelOrder(int idOrder) {
+
+		Order order = getOrder(idOrder).get();
+
+		if (order.getState() != State.CREATED){
+
+			return false;
+
+		}
+		order.setState(State.CANCELLED);
+
+		orderReository.save(order);
 
 		return true;
 
