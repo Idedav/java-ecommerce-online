@@ -13,6 +13,8 @@ public interface CartFunctions {
 	boolean existCart(int idUser);
 	
 	StatusOrder deleteCart(int idUser);
+
+	StatusOrder deleteArticleToCart(int idUser, int idArticle);
 	
 	StatusOrder updateCart(int idUser, int idArticle, int qtyOrdered);
 	

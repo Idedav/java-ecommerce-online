@@ -2,8 +2,11 @@ package com.ecommerceOn.ecommerceOn.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.ecommerceOn.ecommerceOn.exception.CartNotFoundException;
 import com.ecommerceOn.ecommerceOn.model.*;
+import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +40,11 @@ public class ServiceCart implements CartFunctions{
 
 	@Override
 	public Optional<Cart> getCartByUserId(int idUser) {
-		
-		return cartRepository.findByUserIdUser(idUser);
-		
+
+		Optional<Cart> cartOpt = cartRepository.findByUserIdUser(idUser);
+
+		return Optional.ofNullable(cartOpt.orElseThrow(() -> new CartNotFoundException("Cart not found for this user")));
+
 	}
 
 	@Override
@@ -49,21 +54,74 @@ public class ServiceCart implements CartFunctions{
 		
 	}
 
+	@Transactional
 	@Override
 	public StatusOrder deleteCart(int idUser) {
-		
+		/*CONTROLLO SE ESISTE IL CART*/
 		if(!existCart(idUser)) {
 			
 			return StatusOrder.DELETE_UNSUCCESFULY;
 			
 		}
+		/*SE ESISTE LO PRENDO*/
 		Cart cart = cartRepository.findByUserIdUser(idUser).get();
+		/*PRENDO ANCHE LE RELAZIONI*/
+		List<ArticleCart> articleCarts = articleCartRepository.findByIdIdCart(cart.getIdCart());
+		/*AGGIORNO TRAMITE UN CICLO LA QUANTITA DISPONIBILE DEGLI ARTICOLI PRESENTI NELLA RELAZIONE ARTICLECART*/
+		for (ArticleCart articleCart : articleCarts){
 
+			Article article = serviceArticle.getArticle(articleCart.getId().getIdArticle()).get();
+
+			article.setQtyAvailable(article.getQtyAvailable() + articleCart.getQtyOrdered());
+
+			articleRepository.save(article);
+
+		}
+		/*ELIMINO IL CARRELLO*/
 		cartRepository.delete(cart);
 
 
 		return StatusOrder.DELETE_SUCCESFULY;
 		
+	}
+
+	@Transactional
+	@Override
+	public StatusOrder deleteArticleToCart(int idUser, int idArticle) {
+
+		Cart cart = cartRepository.findByUserIdUser(idUser).get();
+
+		ArticleCartID articleCartID = new ArticleCartID(cart.getIdCart(), idArticle);
+
+
+		Optional<ArticleCart> articleCartOpt = articleCartRepository.findById(articleCartID);
+		/*CONTROLLO L ESISTENZA DI RELAZIONE ARTICLECART*/
+		if(articleCartOpt.isEmpty()){
+
+			return StatusOrder.DELETE_UNSUCCESFULY;
+
+		}
+		/*SE ESISTE LO PRENDO*/
+		ArticleCart articleCart = articleCartOpt.get();
+		/*AGGIORNO LA QUANTITA DISPONIBILE DEGLI ARTICOLI PRESENTI NELLA RELAZIONE ARTICLECART*/
+		Article article = serviceArticle.getArticle(articleCart.getId().getIdArticle()).get();
+		article.setQtyAvailable(article.getQtyAvailable() + articleCart.getQtyOrdered());
+		articleRepository.save(article);
+		/*ELIMINO L ARTICOLO DAL CARRELLO*/
+		articleCartRepository.delete(articleCart);
+		/*VERIFICO SE NEL CARRELLO ESISTONO ANCORA ARTICOLI SE NON ESISTO ELIMINO ANCHE IL CARRELLO*/
+		List<ArticleCart> articleCarts = articleCartRepository.findByIdIdCart(cart.getIdCart());
+		if (articleCarts.isEmpty()){
+			cartRepository.delete(cart);
+			return StatusOrder.DELETE_SUCCESFULY;
+
+		}
+		/*SE CE NE SONO ANCORA ALLORA AGGIORNO IL PREZZO TOTALE*/
+		cart.setTotalPrice(cart.getTotalPrice() - (article.getUnitPrice() * articleCart.getQtyOrdered()));
+		cartRepository.save(cart);
+
+		return StatusOrder.DELETE_SUCCESFULY;
+
 	}
 
 	@Transactional
@@ -126,7 +184,7 @@ public class ServiceCart implements CartFunctions{
 	@Override
 	public StatusOrder addCart(int idUser, int idArticle, int qtyOrdered) {
 		
-		Optional<Cart> cartOpt = getCartByUserId(idUser);
+		Optional<Cart> cartOpt = cartRepository.findByUserIdUser(idUser);
 		Cart cart = cartOpt.orElse(null);
 		Article article = serviceArticle.getArticle(idArticle).get();
 		

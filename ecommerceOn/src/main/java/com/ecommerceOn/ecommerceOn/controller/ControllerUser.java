@@ -2,6 +2,8 @@ package com.ecommerceOn.ecommerceOn.controller;
 
 import java.util.Optional;
 
+import com.ecommerceOn.ecommerceOn.dto.UserDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,9 @@ public class ControllerUser {
 	
 	@Autowired
 	private ServiceUser serviceUser;
+
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	
 	@PostMapping(value="login", produces= {MediaType.APPLICATION_JSON_VALUE})
@@ -39,8 +44,10 @@ public class ControllerUser {
 		}
 		
 		User user = serviceUser.getUserByEmail(requestLogin.getEmail()).get();
+
+		UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 		
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		return new ResponseEntity<>(userDTO, HttpStatus.OK);
 		
 		
 	}
@@ -53,7 +60,7 @@ public class ControllerUser {
 		
 		if(!userOpt.isPresent()) {
 			
-			return new ResponseEntity<>(userOpt.get(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(userOpt.get(), HttpStatus.NOT_FOUND);
 			
 		}
 		

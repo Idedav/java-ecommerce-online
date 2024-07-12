@@ -35,7 +35,7 @@ public class ServiceOrder implements OrderFunctions{
 	@Override
 	public List<Order> getOrders(int idUser) {
 
-		return orderReository.findByUserIdUser(idUser);
+		return orderReository.findAllByUserIdUserOrderByOrderDateDescOrderTimeDesc(idUser);
 
 	}
 
@@ -96,7 +96,7 @@ public class ServiceOrder implements OrderFunctions{
 
 		Optional<Cart> cartOpt = cartRepository.findById(idCart);
 		/*CONTROLLO SE ESISTE IL CART*/
-		if(!serviceCart.existCart(idCart)){
+		if(cartOpt.isEmpty()){
 			return Optional.empty();
 		}
 		/*SE ESISTE CREO L ORDINE PRENDENDO IL CART*/

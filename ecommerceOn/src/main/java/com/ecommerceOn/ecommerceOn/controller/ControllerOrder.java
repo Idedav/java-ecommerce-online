@@ -95,10 +95,10 @@ public class ControllerOrder {
 
 	}
 
-	@PostMapping(value="add-order/{id_cart}/{type_payment}", produces= {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> addOrder(@PathVariable("id_cart") int idCart, @PathVariable("type_payment")TypePayment typePayment){
+	@PostMapping(value="add-order", produces= {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> addOrder(@RequestBody RequestOrder requestOrder){
 
-		Optional<Order> orderOpt = serviceOrder.addOrder(idCart, typePayment);
+		Optional<Order> orderOpt = serviceOrder.addOrder(requestOrder.getIdCart(), requestOrder.getTypePayment());
 
 		if(orderOpt.isPresent()) {
 

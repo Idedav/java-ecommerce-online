@@ -120,5 +120,21 @@ public class ControllerCart {
 		
 		
 	}
+
+	@DeleteMapping(value="delete-article-cart/{id_user}/{id_article}", produces= {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<?> deleteCart(@PathVariable("id_user") int idUser, @PathVariable("id_article") int idArticle ){
+
+		StatusOrder status = serviceCart.deleteArticleToCart(idUser, idArticle);
+
+		if(status == StatusOrder.DELETE_SUCCESFULY) {
+
+			return new ResponseEntity<>(status, HttpStatus.OK);
+
+		}
+
+		return new ResponseEntity<>(status, HttpStatus.BAD_REQUEST);
+
+
+	}
 	
 }
